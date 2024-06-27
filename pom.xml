@@ -42,11 +42,6 @@
             <artifactId>mockserver-netty</artifactId>
             <version>5.11.2</version>
         </dependency>
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.28</version>
-        </dependency>
     </dependencies>
 
 </project>
