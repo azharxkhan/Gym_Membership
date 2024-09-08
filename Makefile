@@ -28,4 +28,12 @@ docker-build:
 
 # Run Docker container
 docker-run:
-	docker run -p 8080:8080 gymapp
+	docker run -it -p 8080:8080 gymapp
+
+# Stop and remove all running containers (optional, in case it's needed)
+docker-clean:
+	docker rm -f $$(docker ps -aq)
+
+# Delete all Docker images
+docker-delete-images:
+	docker rmi -f $$(docker images -q)
