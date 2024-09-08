@@ -1,11 +1,14 @@
 package gymApp.service;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import gymApp.dao.UserDAO;
 import gymApp.model.User;
+import gymApp.util.UserService;
 
 public class UserServiceTest {
 
@@ -15,14 +18,13 @@ public class UserServiceTest {
     @BeforeEach
     public void setUp() {
         userDAO = Mockito.mock(UserDAO.class);
-        userService = new UserService(userDAO); // Assuming UserService takes UserDAO as a constructor parameter
+        userService = new UserService(userDAO); 
     }
 
     @Test
     public void testRegisterUserSuccess() {
-        User user = new User("JohnDoe", "password123", "john@example.com");
+        User user = new User(1, "JohnDoe", "password123", "john@example.com");
 
-        // Mocking the behavior of UserDAO
         Mockito.when(userDAO.save(user)).thenReturn(true);
 
         boolean result = userService.registerUser(user);
@@ -33,15 +35,14 @@ public class UserServiceTest {
 
     @Test
     public void testRegisterUserFailOnDuplicate() {
-        User user = new User("JohnDoe", "password123", "john@example.com");
+        User user = new User(1, "JohnDoe", "password123", "john@example.com");
 
-        // Mocking the behavior of UserDAO to simulate duplicate user
         Mockito.when(userDAO.findByUsername("JohnDoe")).thenReturn(user);
 
         boolean result = userService.registerUser(user);
 
         assertFalse(result, "User registration should fail due to duplicate username.");
-        Mockito.verify(userDAO, Mockito.times(0)).save(user); // Save should not be called
+        Mockito.verify(userDAO, Mockito.times(0)).save(user); 
     }
 }
 
