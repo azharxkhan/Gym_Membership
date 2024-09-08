@@ -8,7 +8,6 @@ import org.mockito.Mockito;
 
 import gymApp.dao.UserDAO;
 import gymApp.model.User;
-import gymApp.util.UserService;
 
 public class UserServiceTest {
 
@@ -23,9 +22,10 @@ public class UserServiceTest {
 
     @Test
     public void testRegisterUserSuccess() {
-        User user = new User(1, "JohnDoe", "password123", "john@example.com");
+        User user = new User(0, "JohnDoe", "password123", "john@example.com");
 
-        Mockito.when(userDAO.save(user)).thenReturn(true);
+        Mockito.when(userDAO.findByUsername("JohnDoe")).thenReturn(null); 
+        Mockito.when(userDAO.save(user)).thenReturn(true);  
 
         boolean result = userService.registerUser(user);
 
@@ -35,14 +35,13 @@ public class UserServiceTest {
 
     @Test
     public void testRegisterUserFailOnDuplicate() {
-        User user = new User(1, "JohnDoe", "password123", "john@example.com");
+        User existingUser = new User(1, "JohnDoe", "password123", "john@example.com");
 
-        Mockito.when(userDAO.findByUsername("JohnDoe")).thenReturn(user);
+        Mockito.when(userDAO.findByUsername("JohnDoe")).thenReturn(existingUser); 
 
-        boolean result = userService.registerUser(user);
+        boolean result = userService.registerUser(existingUser);
 
         assertFalse(result, "User registration should fail due to duplicate username.");
-        Mockito.verify(userDAO, Mockito.times(0)).save(user); 
+        Mockito.verify(userDAO, Mockito.times(0)).save(existingUser); 
     }
 }
-
