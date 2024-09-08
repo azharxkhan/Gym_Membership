@@ -1,4 +1,4 @@
-package gymApp.Controller;
+package gymApp.controller;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -9,7 +9,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import gymApp.controller.LoginController;
 import gymApp.service.AuthService;
 
 class LoginControllerTest {
