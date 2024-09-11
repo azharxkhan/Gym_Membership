@@ -1,15 +1,18 @@
 package gymApp.dao;
 
-import gymApp.model.User;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
 
-import static org.junit.Assert.*;
+import org.junit.After;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import org.junit.Before;
+import org.junit.Test;
+
+import gymApp.model.User;
 
 public class UserDAOImplTest {
 
@@ -18,11 +21,9 @@ public class UserDAOImplTest {
 
     @Before
     public void setUp() throws Exception {
-        // Set up SQLite database connection
         connection = DriverManager.getConnection("jdbc:sqlite:./gymdb_test.db");
         userDAO = new UserDAOImpl(connection);
 
-        // Create users table for testing
         String createTableSQL = "CREATE TABLE IF NOT EXISTS users (" +
                                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                                 "username TEXT NOT NULL, " +
@@ -35,7 +36,6 @@ public class UserDAOImplTest {
 
     @After
     public void tearDown() throws Exception {
-        // Clean up database after each test
         try (Statement stmt = connection.createStatement()) {
             stmt.execute("DROP TABLE IF EXISTS users");
         }
@@ -48,7 +48,6 @@ public class UserDAOImplTest {
         boolean result = userDAO.save(user);
         assertTrue(result);
 
-        // Check if the user was saved in the database
         User savedUser = userDAO.findByUsername("testuser");
         assertNotNull(savedUser);
         assertEquals("testuser", savedUser.getUsername());
@@ -56,11 +55,9 @@ public class UserDAOImplTest {
 
     @Test
     public void testFindUserByUsername() throws Exception {
-        // Insert a user into the database for testing
         User user = new User("john", "password123", "john@example.com");
         userDAO.save(user);
 
-        // Find the user by username
         User foundUser = userDAO.findByUsername("john");
         assertNotNull(foundUser);
         assertEquals("john", foundUser.getUsername());
@@ -69,7 +66,6 @@ public class UserDAOImplTest {
 
     @Test
     public void testUpdateUser() throws Exception {
-        // Insert and then update a user
         User user = new User("updateuser", "oldpassword", "old@example.com");
         userDAO.save(user);
 
@@ -78,7 +74,6 @@ public class UserDAOImplTest {
         boolean result = userDAO.update(user);
         assertTrue(result);
 
-        // Fetch updated user
         User updatedUser = userDAO.findByUsername("updateuser");
         assertEquals("newpassword", updatedUser.getPassword());
         assertEquals("new@example.com", updatedUser.getEmail());
@@ -86,14 +81,12 @@ public class UserDAOImplTest {
 
     @Test
     public void testDeleteUser() throws Exception {
-        // Insert and then delete a user
         User user = new User("deleteuser", "password", "delete@example.com");
         userDAO.save(user);
 
         boolean result = userDAO.delete(user.getUsername());
         assertTrue(result);
 
-        // Verify the user was deleted
         User deletedUser = userDAO.findByUsername("deleteuser");
         assertNull(deletedUser);
     }
