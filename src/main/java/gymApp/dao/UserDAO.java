@@ -1,5 +1,7 @@
 package gymApp.dao;
 
+import java.util.List;
+
 import gymApp.model.User;
 
 /**
@@ -38,4 +40,18 @@ public interface UserDAO {
      * @return true if the user is successfully deleted, otherwise false
      */
     boolean delete(String username);
+
+    /**
+     * Finds all users in the database.
+     *
+     * @return a list of all User objects in the database
+     */
+    List<User> findAllUsers();
+
+    /**
+     * Counts the total number of users in the database.
+     *
+     * @return the total number of users
+     */
+    int countUsers();
 }
