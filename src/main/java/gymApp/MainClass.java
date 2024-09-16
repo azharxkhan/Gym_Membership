@@ -5,13 +5,13 @@ import java.util.Scanner;
 import gymApp.controller.LoginController;
 import gymApp.controller.RegisterController;
 import gymApp.dao.UserDAOImpl;
+import gymApp.model.User;
 import gymApp.service.AuthService;
 import gymApp.service.UserService;
 
 public class MainClass {
     public static void main(String[] args) {
         UserDAOImpl userDAO = new UserDAOImpl();  
-
         AuthService authService = new AuthService(userDAO); 
         UserService userService = new UserService(userDAO);  
         LoginController loginController = new LoginController(authService);
@@ -31,7 +31,31 @@ public class MainClass {
 
             boolean isAuthenticated = loginController.login(username, password);
             if (isAuthenticated) {
-                System.out.println("Successfully authenticated.");
+                User authenticatedUser = userService.findByUsername(username);
+                System.out.println("Successfully authenticated. Your role is: " + authenticatedUser.getRole());
+
+                if ("admin".equalsIgnoreCase(authenticatedUser.getRole())) {
+                    System.out.println("As an admin, do you want to register a new admin user? (yes/no):");
+                    String adminChoice = scanner.nextLine();
+
+                    if ("yes".equalsIgnoreCase(adminChoice)) {
+                        System.out.println("Enter a new admin username:");
+                        String newAdminUsername = scanner.nextLine();
+
+                        System.out.println("Enter a new admin password:");
+                        String newAdminPassword = scanner.nextLine();
+
+                        System.out.println("Enter new admin's email:");
+                        String newAdminEmail = scanner.nextLine();
+
+                        boolean isAdminRegistered = registerController.register(newAdminUsername, newAdminPassword, newAdminEmail, "admin");
+                        if (isAdminRegistered) {
+                            System.out.println("New admin registration successful.");
+                        } else {
+                            System.out.println("Admin registration failed. Username may already exist.");
+                        }
+                    }
+                }
             } else {
                 System.out.println("Authentication failed.");
             }
@@ -45,9 +69,10 @@ public class MainClass {
             System.out.println("Enter your email:");
             String email = scanner.nextLine();
 
-            boolean isRegistered = registerController.register(newUsername, newPassword, email);
+            // Default registration is for a member, not admin
+            boolean isRegistered = registerController.register(newUsername, newPassword, email, "member");
             if (isRegistered) {
-                System.out.println("Registration successful.");
+                System.out.println("Registration successful. You have been registered as a member.");
             } else {
                 System.out.println("Registration failed. Username may already exist.");
             }

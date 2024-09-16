@@ -8,6 +8,7 @@ public class User {
     private String username;
     private String password;
     private String email;
+    private String role; // New field to represent the role (admin or member)
 
     /**
      * No-argument constructor for creating an empty user (useful for testing or default initialization).
@@ -16,31 +17,35 @@ public class User {
     }
 
     /**
-     * Constructor for creating a new user where the ID is auto-generated.
+     * Constructor for creating a new user where the ID is auto-generated and the role is provided.
      *
      * @param username the username of the user
      * @param password the password of the user
      * @param email the email of the user
+     * @param role the role of the user (admin or member)
      */
-    public User(String username, String password, String email) {
+    public User(String username, String password, String email, String role) {
         this.username = username;
         this.password = password;
         this.email = email;
+        this.role = role;
     }
 
     /**
-     * Constructor for creating a user with a known ID (typically for existing users).
+     * Constructor for creating a user with a known ID (typically for existing users) and the role is provided.
      *
      * @param id the unique identifier of the user
      * @param username the username of the user
      * @param password the password of the user
      * @param email the email of the user
+     * @param role the role of the user (admin or member)
      */
-    public User(int id, String username, String password, String email) {
+    public User(int id, String username, String password, String email, String role) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.email = email;
+        this.role = role;
     }
 
     /**
@@ -116,6 +121,24 @@ public class User {
     }
 
     /**
+     * Returns the role of the user.
+     * 
+     * @return the user's role
+     */
+    public String getRole() {
+        return role;
+    }
+
+    /**
+     * Sets the role of the user.
+     * 
+     * @param role the new role of the user (admin or member)
+     */
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    /**
      * Returns a string representation of the User object.
      * 
      * @return a string containing user details
@@ -127,6 +150,7 @@ public class User {
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
+                ", role='" + role + '\'' +
                 '}';
     }
 }
