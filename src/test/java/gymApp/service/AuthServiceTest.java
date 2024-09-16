@@ -1,6 +1,8 @@
 package gymApp.service;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -21,7 +23,7 @@ public class AuthServiceTest {
 
     @Test
     public void testAuthenticateSuccess() {
-        User user = new User(1, "Azhar", "CorrectPassword", "azhar@example.com");
+        User user = new User(1, "Azhar", "CorrectPassword", "azhar@example.com", "member");
 
         Mockito.when(userDAO.findByUsername("Azhar")).thenReturn(user);
 
@@ -32,7 +34,7 @@ public class AuthServiceTest {
 
     @Test
     public void testAuthenticateFailWrongPassword() {
-        User user = new User(1, "Azhar", "CorrectPassword", "azhar@example.com");
+        User user = new User(1, "Azhar", "CorrectPassword", "azhar@example.com", "admin");
 
         Mockito.when(userDAO.findByUsername("Azhar")).thenReturn(user);
 
@@ -48,5 +50,17 @@ public class AuthServiceTest {
         boolean result = authService.authenticate("NonExistentUser", "SomePassword");
 
         assertFalse(result, "Authentication should fail if the user does not exist.");
+    }
+
+    @Test
+    public void testAuthenticateAdminUser() {
+        User adminUser = new User(1, "AdminUser", "adminpass", "admin@example.com", "admin");
+
+        Mockito.when(userDAO.findByUsername("AdminUser")).thenReturn(adminUser);
+
+        boolean result = authService.authenticate("AdminUser", "adminpass");
+
+        assertTrue(result, "Authentication should succeed for an admin user with correct credentials.");
+        assertEquals("admin", adminUser.getRole(), "The user role should be 'admin'.");
     }
 }

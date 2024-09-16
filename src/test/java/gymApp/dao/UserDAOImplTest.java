@@ -1,93 +1,93 @@
 package gymApp.dao;
 
+import gymApp.model.User;
+import org.junit.jupiter.api.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.Statement;
+import java.sql.SQLException;
+import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.After;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import org.junit.Before;
-import org.junit.Test;
-
-import gymApp.model.User;
-
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class UserDAOImplTest {
 
     private UserDAOImpl userDAO;
     private Connection connection;
 
-    @Before
-    public void setUp() throws Exception {
-        connection = DriverManager.getConnection("jdbc:sqlite:./gymdb_test.db");
+    @BeforeAll
+    public void setUp() throws SQLException {
+        // Initialize in-memory SQLite database for testing
+        connection = DriverManager.getConnection("jdbc:sqlite::memory:");
         userDAO = new UserDAOImpl(connection);
-
-        String createTableSQL = "CREATE TABLE IF NOT EXISTS users (" +
-                                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                                "username TEXT NOT NULL, " +
-                                "password TEXT NOT NULL, " +
-                                "email TEXT NOT NULL)";
-        try (Statement stmt = connection.createStatement()) {
-            stmt.execute(createTableSQL);
-        }
+        
+        // Create the users table for testing
+        connection.createStatement().execute(
+            "CREATE TABLE users (id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            "username TEXT NOT NULL UNIQUE, password TEXT NOT NULL, email TEXT NOT NULL, role TEXT)"
+        );
     }
 
-    @After
-    public void tearDown() throws Exception {
-        try (Statement stmt = connection.createStatement()) {
-            stmt.execute("DROP TABLE IF EXISTS users");
-        }
+    @AfterAll
+    public void tearDown() throws SQLException {
         connection.close();
     }
 
     @Test
-    public void testSaveUser() throws Exception {
-        User user = new User("testuser", "password123", "test@example.com");
-        boolean result = userDAO.save(user);
-        assertTrue(result);
-
-        User savedUser = userDAO.findByUsername("testuser");
-        assertNotNull(savedUser);
-        assertEquals("testuser", savedUser.getUsername());
+    public void testSaveUser() {
+        User user = new User(0, "testuser", "password", "testuser@example.com", "member");
+        assertTrue(userDAO.save(user), "User should be saved successfully");
     }
 
     @Test
-    public void testFindUserByUsername() throws Exception {
-        User user = new User("john", "password123", "john@example.com");
+    public void testFindUserByUsername() {
+        // Save a user first
+        User user = new User(0, "testfind", "password", "finduser@example.com", "member");
         userDAO.save(user);
 
-        User foundUser = userDAO.findByUsername("john");
-        assertNotNull(foundUser);
-        assertEquals("john", foundUser.getUsername());
-        assertEquals("john@example.com", foundUser.getEmail());
+        // Find the user by username
+        User foundUser = userDAO.findByUsername("testfind");
+        assertNotNull(foundUser, "User should be found");
+        assertEquals("testfind", foundUser.getUsername(), "Username should match");
     }
 
     @Test
-    public void testUpdateUser() throws Exception {
-        User user = new User("updateuser", "oldpassword", "old@example.com");
+    public void testUpdateUser() {
+        // Save a user first
+        User user = new User(0, "testupdate", "password", "updateuser@example.com", "member");
         userDAO.save(user);
 
+        // Update the user's details
         user.setPassword("newpassword");
-        user.setEmail("new@example.com");
-        boolean result = userDAO.update(user);
-        assertTrue(result);
+        user.setEmail("updateduser@example.com");
+        assertTrue(userDAO.update(user), "User should be updated successfully");
 
-        User updatedUser = userDAO.findByUsername("updateuser");
-        assertEquals("newpassword", updatedUser.getPassword());
-        assertEquals("new@example.com", updatedUser.getEmail());
+        // Verify the update
+        User updatedUser = userDAO.findByUsername("testupdate");
+        assertEquals("newpassword", updatedUser.getPassword(), "Password should be updated");
+        assertEquals("updateduser@example.com", updatedUser.getEmail(), "Email should be updated");
     }
 
     @Test
-    public void testDeleteUser() throws Exception {
-        User user = new User("deleteuser", "password", "delete@example.com");
+    public void testDeleteUser() {
+        // Save a user first
+        User user = new User(0, "testdelete", "password", "deleteuser@example.com", "member");
         userDAO.save(user);
 
-        boolean result = userDAO.delete(user.getUsername());
-        assertTrue(result);
+        // Delete the user
+        assertTrue(userDAO.delete("testdelete"), "User should be deleted successfully");
 
-        User deletedUser = userDAO.findByUsername("deleteuser");
-        assertNull(deletedUser);
+        // Verify the deletion
+        assertNull(userDAO.findByUsername("testdelete"), "User should not be found after deletion");
+    }
+
+    @Test
+    public void testSaveDuplicateUser() {
+        User user1 = new User(0, "testduplicate", "password", "duplicateuser@example.com", "member");
+        User user2 = new User(0, "testduplicate", "password", "duplicateuser2@example.com", "member");
+
+        // Save the first user
+        assertTrue(userDAO.save(user1), "First user should be saved");
+
+        // Try to save a user with the same username
+        assertFalse(userDAO.save(user2), "Saving duplicate user should fail");
     }
 }
