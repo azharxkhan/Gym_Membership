@@ -1,93 +1,111 @@
 package gymApp.dao;
 
 import gymApp.model.User;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class UserDAOImplTest {
 
-    private UserDAOImpl userDAO;
     private Connection connection;
+    private UserDAOImpl userDAO;
 
-    @BeforeAll
+    @BeforeEach
     public void setUp() throws SQLException {
-        // Initialize in-memory SQLite database for testing
+        // Set up an in-memory SQLite database
         connection = DriverManager.getConnection("jdbc:sqlite::memory:");
         userDAO = new UserDAOImpl(connection);
-        
-        // Create the users table for testing
-        connection.createStatement().execute(
-            "CREATE TABLE users (id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            "username TEXT NOT NULL UNIQUE, password TEXT NOT NULL, email TEXT NOT NULL, role TEXT)"
-        );
+
+        // Create the users table
+        userDAO.createUsersTable();
     }
 
-    @AfterAll
+    @AfterEach
     public void tearDown() throws SQLException {
         connection.close();
     }
 
     @Test
     public void testSaveUser() {
-        User user = new User(0, "testuser", "password", "testuser@example.com", "member");
-        assertTrue(userDAO.save(user), "User should be saved successfully");
+        User user = new User(0, "JohnDoe", "Password123", "john@example.com", "member");
+
+        boolean result = userDAO.save(user);
+
+        assertTrue(result, "User should be saved successfully.");
+        User savedUser = userDAO.findByUsername("JohnDoe");
+        assertNotNull(savedUser, "Saved user should not be null.");
+        assertEquals("JohnDoe", savedUser.getUsername(), "Username should match.");
     }
 
     @Test
-    public void testFindUserByUsername() {
-        // Save a user first
-        User user = new User(0, "testfind", "password", "finduser@example.com", "member");
+    public void testFindByUsername() {
+        User user = new User(0, "JaneDoe", "Password123", "jane@example.com", "member");
         userDAO.save(user);
 
-        // Find the user by username
-        User foundUser = userDAO.findByUsername("testfind");
-        assertNotNull(foundUser, "User should be found");
-        assertEquals("testfind", foundUser.getUsername(), "Username should match");
+        User foundUser = userDAO.findByUsername("JaneDoe");
+
+        assertNotNull(foundUser, "User should be found in the database.");
+        assertEquals("JaneDoe", foundUser.getUsername(), "Username should match.");
+        assertEquals("jane@example.com", foundUser.getEmail(), "Email should match.");
     }
 
     @Test
     public void testUpdateUser() {
-        // Save a user first
-        User user = new User(0, "testupdate", "password", "updateuser@example.com", "member");
+        User user = new User(0, "JohnDoe", "Password123", "john@example.com", "member");
         userDAO.save(user);
 
-        // Update the user's details
-        user.setPassword("newpassword");
-        user.setEmail("updateduser@example.com");
-        assertTrue(userDAO.update(user), "User should be updated successfully");
+        user.setEmail("newemail@example.com");
+        user.setPassword("NewPassword123");
+        boolean updateResult = userDAO.update(user);
 
-        // Verify the update
-        User updatedUser = userDAO.findByUsername("testupdate");
-        assertEquals("newpassword", updatedUser.getPassword(), "Password should be updated");
-        assertEquals("updateduser@example.com", updatedUser.getEmail(), "Email should be updated");
+        assertTrue(updateResult, "User should be updated successfully.");
+
+        User updatedUser = userDAO.findByUsername("JohnDoe");
+        assertNotNull(updatedUser, "Updated user should not be null.");
+        assertEquals("newemail@example.com", updatedUser.getEmail(), "Email should be updated.");
+        assertEquals("NewPassword123", updatedUser.getPassword(), "Password should be updated.");
     }
 
     @Test
     public void testDeleteUser() {
-        // Save a user first
-        User user = new User(0, "testdelete", "password", "deleteuser@example.com", "member");
+        User user = new User(0, "JohnDoe", "Password123", "john@example.com", "member");
         userDAO.save(user);
 
-        // Delete the user
-        assertTrue(userDAO.delete("testdelete"), "User should be deleted successfully");
+        boolean deleteResult = userDAO.delete("JohnDoe");
 
-        // Verify the deletion
-        assertNull(userDAO.findByUsername("testdelete"), "User should not be found after deletion");
+        assertTrue(deleteResult, "User should be deleted successfully.");
+        User deletedUser = userDAO.findByUsername("JohnDoe");
+        assertNull(deletedUser, "Deleted user should be null.");
     }
 
     @Test
-    public void testSaveDuplicateUser() {
-        User user1 = new User(0, "testduplicate", "password", "duplicateuser@example.com", "member");
-        User user2 = new User(0, "testduplicate", "password", "duplicateuser2@example.com", "member");
+    public void testFindAllUsers() {
+        User user1 = new User(0, "UserOne", "Password123", "userone@example.com", "member");
+        User user2 = new User(0, "UserTwo", "Password456", "usertwo@example.com", "member");
+        userDAO.save(user1);
+        userDAO.save(user2);
 
-        // Save the first user
-        assertTrue(userDAO.save(user1), "First user should be saved");
+        List<User> users = userDAO.findAllUsers();
 
-        // Try to save a user with the same username
-        assertFalse(userDAO.save(user2), "Saving duplicate user should fail");
+        assertEquals(2, users.size(), "There should be two users in the database.");
+    }
+
+    @Test
+    public void testCountUsers() {
+        User user1 = new User(0, "UserOne", "Password123", "userone@example.com", "member");
+        User user2 = new User(0, "UserTwo", "Password456", "usertwo@example.com", "member");
+        userDAO.save(user1);
+        userDAO.save(user2);
+
+        int userCount = userDAO.countUsers();
+
+        assertEquals(2, userCount, "User count should be 2.");
     }
 }
