@@ -33,7 +33,7 @@ public class UserDAOImpl implements UserDAO {
         }
     }
 
-    private void createUsersTable() throws SQLException {
+    protected void createUsersTable() throws SQLException {
         String createTableSQL = "CREATE TABLE IF NOT EXISTS users (" +
                                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                                 "username TEXT NOT NULL UNIQUE, " +
