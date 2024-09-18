@@ -33,7 +33,8 @@ public class UserDAOImpl implements UserDAO {
         }
     }
 
-    protected void createUsersTable() throws SQLException {
+    // Make this method public so it can be accessed in tests
+    public void createUsersTable() throws SQLException {
         String createTableSQL = "CREATE TABLE IF NOT EXISTS users (" +
                                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                                 "username TEXT NOT NULL UNIQUE, " +
@@ -69,6 +70,13 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public boolean save(User user) {
+        // Check if the username already exists in the database
+        if (findByUsername(user.getUsername()) != null) {
+            System.out.println("User with username " + user.getUsername() + " already exists.");
+            return false;  // Username already exists, so return false
+        }
+        
+        // If the username doesn't exist, proceed with saving the user
         String query = "INSERT INTO users (username, password, email, role) VALUES (?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setString(1, user.getUsername());
@@ -82,6 +90,7 @@ public class UserDAOImpl implements UserDAO {
         }
         return false;
     }
+
 
     @Override
     public boolean update(User user) {
