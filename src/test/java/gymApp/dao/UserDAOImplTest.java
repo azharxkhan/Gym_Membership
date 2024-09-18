@@ -1,16 +1,20 @@
 package gymApp.dao;
 
-import gymApp.model.User;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.AfterEach;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import gymApp.model.User;
 
 public class UserDAOImplTest {
 
@@ -108,4 +112,19 @@ public class UserDAOImplTest {
 
         assertEquals(2, userCount, "User count should be 2.");
     }
+
+    @Test
+    public void testSaveDuplicateUser() {
+        User user1 = new User(0, "duplicateUser", "password123", "email1@example.com", "member");
+        User user2 = new User(0, "duplicateUser", "password456", "email2@example.com", "member");
+
+        // First save should succeed
+        boolean result1 = userDAO.save(user1);
+        assertTrue(result1, "First user save should succeed.");
+
+        // Second save with the same username should fail
+        boolean result2 = userDAO.save(user2);
+        assertFalse(result2, "Second user save should fail due to duplicate username.");
+    }
+
 }
