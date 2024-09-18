@@ -22,6 +22,9 @@ package:
 run:
 	$(MVN) exec:java -Dexec.mainClass="gymApp.MainClass"
 
+run-javafx:
+	$(MVN) javafx:run
+
 # Build Docker image
 docker-build:
 	docker build -t gymapp .
