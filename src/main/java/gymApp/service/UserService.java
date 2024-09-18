@@ -6,15 +6,20 @@ import gymApp.dao.UserDAO;
 import gymApp.model.User;
 
 public class UserService {
-    private UserDAO userDAO;
+    private final UserDAO userDAO;
 
+    /**
+     * Constructor to initialize the UserService with a UserDAO instance.
+     *
+     * @param userDAO the UserDAO used to interact with the data layer
+     */
     public UserService(UserDAO userDAO) {
         this.userDAO = userDAO;
     }
 
     /**
      * Finds a user by their username.
-     * 
+     *
      * @param username the username of the user
      * @return the User object if found, otherwise null
      */
@@ -24,38 +29,33 @@ public class UserService {
 
     /**
      * Registers a new user if the username is unique and the input is valid.
-     * 
+     *
      * @param user the user object containing username, password, email, and role
      * @return true if registration is successful, false otherwise
      */
     public boolean registerUser(User user) {
-        // Check if the username is already taken
         if (userDAO.findByUsername(user.getUsername()) != null) {
-            return false; 
+            return false;
         }
 
-        // Validate email format
         if (!isValidEmail(user.getEmail())) {
             return false;
         }
 
-        // Validate password strength
         if (!isValidPassword(user.getPassword())) {
             return false;
         }
 
-        // Ensure the role is either "admin" or "member"
         if (!"admin".equalsIgnoreCase(user.getRole()) && !"member".equalsIgnoreCase(user.getRole())) {
             return false;
         }
 
-        // Save the user if all validations pass
         return userDAO.save(user);
     }
 
     /**
      * Validates email format using a regex pattern.
-     * 
+     *
      * @param email the email to validate
      * @return true if the email format is valid, false otherwise
      */
@@ -66,9 +66,9 @@ public class UserService {
     }
 
     /**
-     * Validates password strength by ensuring it is at least 8 characters long 
+     * Validates password strength by ensuring it is at least 8 characters long
      * and contains at least one uppercase letter, one lowercase letter, and one number.
-     * 
+     *
      * @param password the password to validate
      * @return true if the password is strong enough, false otherwise
      */
@@ -90,12 +90,11 @@ public class UserService {
                 hasDigit = true;
             }
 
-            // If all conditions are met, no need to continue checking
             if (hasUppercase && hasLowercase && hasDigit) {
                 return true;
             }
         }
 
-        return false;  // Return false if any condition is not met
+        return false;
     }
 }
