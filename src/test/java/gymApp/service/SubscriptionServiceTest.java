@@ -1,14 +1,14 @@
 package gymApp.service;
 
-import gymApp.dao.SubscriptionDAO;
-import gymApp.model.Subscription;
+import java.util.Date;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.util.Date;
-
-import static org.junit.jupiter.api.Assertions.*;
+import gymApp.dao.SubscriptionDAO;
+import gymApp.model.Subscription;
 
 public class SubscriptionServiceTest {
 
@@ -25,10 +25,13 @@ public class SubscriptionServiceTest {
     public void testCreateSubscription() {
         Subscription subscription = new Subscription(0, 1, "Monthly", new Date(), new Date(), "active");
 
-        Mockito.when(subscriptionDAO.save(subscription)).thenReturn(true);
+        // Use ArgumentMatchers to allow any Subscription object passed to the DAO's save method
+        Mockito.when(subscriptionDAO.save(Mockito.any(Subscription.class))).thenReturn(true);
 
+        // Assume createSubscription method in SubscriptionService constructs a Subscription object and saves it
         boolean result = subscriptionService.createSubscription(1, "Monthly", new Date(), new Date());
 
+        // Assert the result
         assertTrue(result, "Subscription creation should succeed.");
     }
 
