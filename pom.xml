@@ -86,14 +86,6 @@
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
 
-        <!-- In your Maven pom.xml -->
-        <dependency>
-            <groupId>com.stripe</groupId>
-            <artifactId>stripe-java</artifactId>
-            <version>20.60.0</version>
-        </dependency>
-
-
     </dependencies>
 
     <build>
