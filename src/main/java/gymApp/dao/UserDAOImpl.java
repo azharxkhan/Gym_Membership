@@ -17,12 +17,14 @@ public class UserDAOImpl implements UserDAO {
 
     public UserDAOImpl() {
         try {
+            Class.forName("org.sqlite.JDBC");  // Explicitly load the SQLite JDBC driver
             this.connection = DriverManager.getConnection("jdbc:sqlite:gymdb.db");
             createUsersTable();  // Ensure the table exists
-        } catch (SQLException e) {
+        } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
+    
 
     public UserDAOImpl(Connection connection) {
         this.connection = connection;
@@ -54,6 +56,7 @@ public class UserDAOImpl implements UserDAO {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
+                System.out.println("User found in database: " + rs.getString("username"));
                 return new User(
                         rs.getInt("id"),
                         rs.getString("username"),
@@ -61,6 +64,8 @@ public class UserDAOImpl implements UserDAO {
                         rs.getString("email"),
                         rs.getString("role")
                 );
+            } else {
+                System.out.println("No user found with username: " + username);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -70,13 +75,13 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public boolean save(User user) {
-        // Check if the username already exists in the database
         if (findByUsername(user.getUsername()) != null) {
             System.out.println("User with username " + user.getUsername() + " already exists.");
-            return false;  // Username already exists, so return false
+            return false;  
         }
-        
-        // If the username doesn't exist, proceed with saving the user
+
+        System.out.println("Attempting to save user: " + user.getUsername());
+
         String query = "INSERT INTO users (username, password, email, role) VALUES (?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setString(1, user.getUsername());
@@ -84,6 +89,9 @@ public class UserDAOImpl implements UserDAO {
             stmt.setString(3, user.getEmail());
             stmt.setString(4, user.getRole());
             int rowsAffected = stmt.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("User saved successfully: " + user.getUsername());
+            }
             return rowsAffected > 0;
         } catch (SQLException e) {
             e.printStackTrace();
