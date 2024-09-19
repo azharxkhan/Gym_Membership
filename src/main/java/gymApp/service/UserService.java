@@ -94,6 +94,7 @@ public class UserService {
                 return true;
             }
         }
+        System.out.println("Invalid password: Must have Uppercase, Lowercase and a Digit");
 
         return false;
     }
