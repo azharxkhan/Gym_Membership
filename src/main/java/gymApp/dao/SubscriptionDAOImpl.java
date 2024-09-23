@@ -18,13 +18,12 @@ public class SubscriptionDAOImpl implements SubscriptionDAO {
     public SubscriptionDAOImpl(Connection connection) {
         this.connection = connection;
         try {
-            createSubscriptionsTable();  // Ensure the table exists when instantiated
+            createSubscriptionsTable();  
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    // Make this method protected or public so it can be accessed in tests
     public void createSubscriptionsTable() throws SQLException {
         String createTableSQL = "CREATE TABLE IF NOT EXISTS subscriptions (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -54,7 +53,7 @@ public class SubscriptionDAOImpl implements SubscriptionDAO {
             if (rowsAffected > 0) {
                 ResultSet generatedKeys = stmt.getGeneratedKeys();
                 if (generatedKeys.next()) {
-                    subscription.setId(generatedKeys.getInt(1)); // Set the generated ID in the subscription object
+                    subscription.setId(generatedKeys.getInt(1)); 
                 }
                 return true;
             }

@@ -2,11 +2,11 @@ package gymApp.service;
 
 import java.util.List;
 
-import gymApp.dao.WorkoutPlanDAO;
+import gymApp.dao.WorkoutPlanDAOImpl;
 import gymApp.model.WorkoutPlan;
 
 public class WorkoutService {
-    private final WorkoutPlanDAO workoutPlanDAO = new WorkoutPlanDAO();
+    private final WorkoutPlanDAOImpl workoutPlanDAO = new WorkoutPlanDAOImpl();
 
     public WorkoutPlan createWorkoutPlan(WorkoutPlan plan) {
         return workoutPlanDAO.createWorkoutPlan(plan);
