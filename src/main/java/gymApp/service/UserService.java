@@ -1,5 +1,6 @@
 package gymApp.service;
 
+import java.util.List;
 import java.util.regex.Pattern;
 
 import gymApp.dao.UserDAO;
@@ -15,6 +16,14 @@ public class UserService {
      */
     public UserService(UserDAO userDAO) {
         this.userDAO = userDAO;
+    }
+
+    /**
+     *  Gets all users
+     *  @return a list of all users
+     */
+    public List<User> getAllUsers() {
+        return userDAO.findAllUsers();
     }
 
     /**
