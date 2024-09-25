@@ -1,11 +1,12 @@
 package gymApp.service;
 
-import gymApp.dao.SubscriptionDAO;
-import gymApp.model.Subscription;
 import java.util.Date;
 
+import gymApp.dao.SubscriptionDAO;
+import gymApp.model.Subscription;
+
 public class SubscriptionService {
-    private SubscriptionDAO subscriptionDAO;
+    private final SubscriptionDAO subscriptionDAO;
 
     public SubscriptionService(SubscriptionDAO subscriptionDAO) {
         this.subscriptionDAO = subscriptionDAO;
