@@ -1,25 +1,35 @@
 package gymApp;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Scanner;
 
+import gymApp.dao.WorkoutPlanDAOImpl;
 import gymApp.model.WorkoutPlan;
 import gymApp.service.WorkoutService;
 
 public class Mainworkout {
     public static void main(String[] args) {
-        WorkoutService workoutService = new WorkoutService();
+        try (Connection connection = DriverManager.getConnection("jdbc:sqlite:gymdb.db")) {
+            WorkoutService workoutService = new WorkoutService(new WorkoutPlanDAOImpl(connection));
 
-        // // Preload basic workout plans
-        // preloadBasicWorkoutPlans(workoutService);
+            // Optional: Preload basic workout plans
+            // preloadBasicWorkoutPlans(workoutService);
 
-        addWorkoutPlanThroughInput(workoutService);
+            addWorkoutPlanThroughInput(workoutService);
 
-        displayAllWorkoutPlans(workoutService);
+            displayAllWorkoutPlans(workoutService);
 
-        deleteFirstWorkoutPlan(workoutService);
+            deleteFirstWorkoutPlan(workoutService);
 
-        displayAllWorkoutPlans(workoutService);
+            displayAllWorkoutPlans(workoutService);
+
+        } catch (SQLException e) {
+            System.err.println("Failed to connect to the database.");
+            e.printStackTrace();
+        }
     }
 
     private static void preloadBasicWorkoutPlans(WorkoutService workoutService) {
