@@ -69,7 +69,6 @@ public class MainLogin {
             System.out.println("Enter your email:");
             String email = scanner.nextLine();
 
-            // Default registration is for a member, not admin
             boolean isRegistered = registerController.register(newUsername, newPassword, email, "member");
             if (isRegistered) {
                 System.out.println("Registration successful. You have been registered as a member.");
