@@ -1,6 +1,7 @@
 package gymApp.service;
 
 import java.util.Date;
+import java.util.List;
 
 import gymApp.dao.SubscriptionDAO;
 import gymApp.model.Subscription;
@@ -33,5 +34,9 @@ public class SubscriptionService {
             return subscriptionDAO.update(subscription);
         }
         return false;
+    }
+
+    public List<Subscription> getAllSubscriptions() {
+        return subscriptionDAO.findAll();
     }
 }
