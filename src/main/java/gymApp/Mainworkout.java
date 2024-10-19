@@ -15,7 +15,7 @@ public class Mainworkout {
         try (Connection connection = DriverManager.getConnection("jdbc:sqlite:gymdb.db")) {
             WorkoutService workoutService = new WorkoutService(new WorkoutPlanDAOImpl(connection));
 
-            // Optional: Preload basic workout plans
+            // Optional: Preload basic workout plans (uncomment to use it)
             // preloadBasicWorkoutPlans(workoutService);
 
             addWorkoutPlanThroughInput(workoutService);
