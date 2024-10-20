@@ -47,4 +47,8 @@ public interface WorkoutPlanDAO {
      * @return the workout plan with the given ID, or null if not found
      */
     WorkoutPlan findWorkoutPlanById(int planId);
+
+    void addWeightToPlan(int planId, double weight);
+    void addBodyMeasurementToPlan(int planId, double measurement);
+    void addFitnessGoalToPlan(int planId, String goal);
 }
