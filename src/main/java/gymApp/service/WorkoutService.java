@@ -27,4 +27,16 @@ public class WorkoutService {
     public boolean deleteWorkoutPlan(int planId) {
         return workoutPlanDAO.deleteWorkoutPlan(planId);
     }
+
+    public void addWeightToPlan(int planId, double weight) {
+        workoutPlanDAO.addWeightToPlan(planId, weight);
+    }
+
+    public void addBodyMeasurementToPlan(int planId, double measurement) {
+        workoutPlanDAO.addBodyMeasurementToPlan(planId, measurement);
+    }
+
+    public void addFitnessGoalToPlan(int planId, String goal) {
+        workoutPlanDAO.addFitnessGoalToPlan(planId, goal);
+    }
 }
