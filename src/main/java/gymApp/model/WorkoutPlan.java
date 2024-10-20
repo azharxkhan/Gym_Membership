@@ -1,11 +1,16 @@
 package gymApp.model;
 
+import java.util.List;
+
 public class WorkoutPlan {
     private int planId;
     private String name;
     private String goal;
     private String level;
     private String createdBy;
+    private List<Double> weights;
+    private List<Double> bodyMeasurements;
+    private List<String> fitnessGoals;
 
     public WorkoutPlan() {
     }
@@ -64,5 +69,28 @@ public class WorkoutPlan {
     public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
     }
-}
 
+    public List<Double> getWeights() {
+        return weights;
+    }
+
+    public void setWeights(List<Double> weights) {
+        this.weights = weights;
+    }
+
+    public List<Double> getBodyMeasurements() {
+        return bodyMeasurements;
+    }
+
+    public void setBodyMeasurements(List<Double> bodyMeasurements) {
+        this.bodyMeasurements = bodyMeasurements;
+    }
+
+    public List<String> getFitnessGoals() {
+        return fitnessGoals;
+    }
+
+    public void setFitnessGoals(List<String> fitnessGoals) {
+        this.fitnessGoals = fitnessGoals;
+    }
+}
