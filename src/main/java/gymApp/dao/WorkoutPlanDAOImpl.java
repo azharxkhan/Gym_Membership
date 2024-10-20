@@ -136,4 +136,40 @@ public class WorkoutPlanDAOImpl implements WorkoutPlanDAO {
         }
         return null;
     }
+
+    @Override
+    public void addWeightToPlan(int planId, double weight) {
+        String sql = "INSERT INTO weights(plan_id, date, weight) VALUES(?, CURRENT_DATE, ?)";
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, planId);
+            pstmt.setDouble(2, weight);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void addBodyMeasurementToPlan(int planId, double measurement) {
+        String sql = "INSERT INTO body_measurements(plan_id, date, height) VALUES(?, CURRENT_DATE, ?)";
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, planId);
+            pstmt.setDouble(2, measurement);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void addFitnessGoalToPlan(int planId, String goal) {
+        String sql = "INSERT INTO fitness_goals(plan_id, goal_description) VALUES(?, ?)";
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, planId);
+            pstmt.setString(2, goal);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
