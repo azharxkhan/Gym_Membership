@@ -164,3 +164,11 @@ public class UserDAOImpl implements UserDAO {
         return 0;
     }
 }
+
+
+// Connection Management: Ensure proper closing of database connections to prevent resource leaks and consider using a connection pool for better concurrency handling.
+// Security: Implement password hashing to protect user credentials and ensure input validation to prevent SQL injection.
+// Error Handling: Improve error propagation and handling to provide clearer feedback on failures, rather than just printing stack traces.
+// Data Consistency: Use transactions for operations involving multiple modifications to maintain data integrity, and validate input data for fields like email and role.
+// Code Organization: Consider breaking down the DAO into smaller classes or interfaces for better modularity and maintain
+//These issues need to be fixed later on to ensure user protection and privacy
