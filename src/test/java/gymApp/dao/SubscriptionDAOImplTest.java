@@ -23,11 +23,8 @@ public class SubscriptionDAOImplTest {
 
     @BeforeEach
     public void setUp() throws SQLException {
-        // Set up an in-memory SQLite database
         connection = DriverManager.getConnection("jdbc:sqlite::memory:");
         subscriptionDAO = new SubscriptionDAOImpl(connection);
-
-        // Create the subscriptions table
         subscriptionDAO.createSubscriptionsTable();
     }
 
