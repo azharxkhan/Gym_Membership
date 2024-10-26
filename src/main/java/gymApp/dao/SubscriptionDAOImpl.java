@@ -41,6 +41,12 @@ public class SubscriptionDAOImpl implements SubscriptionDAO {
 
     @Override
     public boolean save(Subscription subscription) {
+        // First, check if there is an existing active subscription for the user
+        if (isUserSubscribed(subscription.getUserId())) {
+            System.out.println("User " + subscription.getUserId() + " already has an active subscription.");
+            return false; // Do not proceed if the user already has an active subscription
+        }
+
         String query = "INSERT INTO subscriptions (user_id, plan_name, start_date, end_date, status) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setInt(1, subscription.getUserId());
@@ -53,7 +59,7 @@ public class SubscriptionDAOImpl implements SubscriptionDAO {
             if (rowsAffected > 0) {
                 ResultSet generatedKeys = stmt.getGeneratedKeys();
                 if (generatedKeys.next()) {
-                    subscription.setId(generatedKeys.getInt(1)); 
+                    subscription.setId(generatedKeys.getInt(1));
                 }
                 return true;
             }
@@ -61,6 +67,18 @@ public class SubscriptionDAOImpl implements SubscriptionDAO {
             e.printStackTrace();
         }
         return false;
+    }
+
+    private boolean isUserSubscribed(int userId) {
+        String query = "SELECT * FROM subscriptions WHERE user_id = ? AND status = 'active'";
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setInt(1, userId);
+            ResultSet rs = stmt.executeQuery();
+            return rs.next(); // Returns true if there is an active subscription
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false; // No active subscription found(needs testing)
     }
 
 
