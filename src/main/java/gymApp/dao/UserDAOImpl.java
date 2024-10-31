@@ -9,6 +9,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.mindrot.jbcrypt.BCrypt;
+
 import gymApp.model.User;
 
 public class UserDAOImpl implements UserDAO {
@@ -76,15 +78,17 @@ public class UserDAOImpl implements UserDAO {
     public boolean save(User user) {
         if (findByUsername(user.getUsername()) != null) {
             System.out.println("User with username " + user.getUsername() + " already exists.");
-            return false;  
+            return false;
         }
 
         System.out.println("Attempting to save user: " + user.getUsername());
 
+        String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
         String query = "INSERT INTO users (username, password, email, role) VALUES (?, ?, ?, ?)";
+        
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setString(1, user.getUsername());
-            stmt.setString(2, user.getPassword());
+            stmt.setString(2, hashedPassword);
             stmt.setString(3, user.getEmail());
             stmt.setString(4, user.getRole());
             int rowsAffected = stmt.executeUpdate();
@@ -97,7 +101,6 @@ public class UserDAOImpl implements UserDAO {
         }
         return false;
     }
-
 
     @Override
     public boolean update(User user) {
