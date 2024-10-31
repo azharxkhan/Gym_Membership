@@ -17,9 +17,9 @@ public class UserDAOImpl implements UserDAO {
 
     public UserDAOImpl() {
         try {
-            Class.forName("org.sqlite.JDBC");  // Explicitly load the SQLite JDBC driver
+            Class.forName("org.sqlite.JDBC");  
             this.connection = DriverManager.getConnection("jdbc:sqlite:gymdb.db");
-            createUsersTable();  // Ensure the table exists
+            createUsersTable();  
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -29,13 +29,12 @@ public class UserDAOImpl implements UserDAO {
     public UserDAOImpl(Connection connection) {
         this.connection = connection;
         try {
-            createUsersTable();  // Ensure the table exists
+            createUsersTable();  
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    // Make this method public so it can be accessed in tests
     public void createUsersTable() throws SQLException {
         String createTableSQL = "CREATE TABLE IF NOT EXISTS users (" +
                                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
