@@ -55,13 +55,14 @@ public class UserDAOImpl implements UserDAO {
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setString(1, username);
             ResultSet rs = stmt.executeQuery();
-
+    
             if (rs.next()) {
+                String hashedPassword = rs.getString("password");
                 System.out.println("User found in database: " + rs.getString("username"));
                 return new User(
                         rs.getInt("id"),
                         rs.getString("username"),
-                        rs.getString("password"),
+                        hashedPassword,  
                         rs.getString("email"),
                         rs.getString("role")
                 );
@@ -72,7 +73,7 @@ public class UserDAOImpl implements UserDAO {
             e.printStackTrace();
         }
         return null;
-    }
+    }    
 
     @Override
     public boolean save(User user) {
@@ -106,7 +107,8 @@ public class UserDAOImpl implements UserDAO {
     public boolean update(User user) {
         String query = "UPDATE users SET password = ?, email = ?, role = ? WHERE username = ?";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setString(1, user.getPassword());
+            String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
+            stmt.setString(1, hashedPassword);
             stmt.setString(2, user.getEmail());
             stmt.setString(3, user.getRole());
             stmt.setString(4, user.getUsername());
