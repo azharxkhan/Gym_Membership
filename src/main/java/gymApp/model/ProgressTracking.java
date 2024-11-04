@@ -31,6 +31,17 @@ public class ProgressTracking {
     }
 
     /**
+     * Method to update the related FitnessGoal with new progress.
+     * @param fitnessGoal The fitness goal to update.
+     * @param progressIncrement The increment in progress.
+     */
+    public void updateGoalProgress(FitnessGoal fitnessGoal, double progressIncrement) {
+        double currentProgress = fitnessGoal.getProgressPercentage();
+        double updatedProgress = currentProgress + progressIncrement;
+        fitnessGoal.updateProgress(updatedProgress);
+    }
+
+    /**
      * Gets the ID of the member associated with this progress tracking entry.
      *
      * @return the member ID.
