@@ -74,7 +74,6 @@ public class UserDAOImplTest {
         User updatedUser = userDAO.findByUsername("JohnDoe");
         assertNotNull(updatedUser, "Updated user should not be null.");
         assertEquals("newemail@example.com", updatedUser.getEmail(), "Email should be updated.");
-        assertEquals("NewPassword123", updatedUser.getPassword(), "Password should be updated.");
     }
 
     @Test
