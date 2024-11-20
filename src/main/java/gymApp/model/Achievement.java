@@ -40,4 +40,21 @@ public class Achievement {
     public void setRewardPoints(int rewardPoints) {
         this.rewardPoints = rewardPoints;
     }
+
+    public void unlock() {
+        if (!isAchieved) {
+            isAchieved = true;
+            System.out.println("Achievement unlocked: " + description);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "Achievement{" +
+                "id=" + id +
+                ", description='" + description + '\'' +
+                ", isAchieved=" + isAchieved +
+                ", rewardPoints=" + rewardPoints +
+                '}';
+    }
 }
