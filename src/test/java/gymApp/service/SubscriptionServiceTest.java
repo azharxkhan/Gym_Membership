@@ -23,21 +23,19 @@ public class SubscriptionServiceTest {
 
     @Test
     public void testCreateSubscription() {
-        Subscription subscription = new Subscription(0, 1, "Monthly", new Date(), new Date(), "active");
+        Subscription subscription = new Subscription(0, 1, "Monthly", new Date(), new Date(), "active", "standard");
 
-        // Use ArgumentMatchers to allow any Subscription object passed to the DAO's save method
         Mockito.when(subscriptionDAO.save(Mockito.any(Subscription.class))).thenReturn(true);
 
-        // Assume createSubscription method in SubscriptionService constructs a Subscription object and saves it
-        boolean result = subscriptionService.createSubscription(1, "Monthly", new Date(), new Date());
+        // Pass the type explicitly here
+        boolean result = subscriptionService.createSubscription(1, "Monthly", new Date(), new Date(), "standard");
 
-        // Assert the result
         assertTrue(result, "Subscription creation should succeed.");
     }
 
     @Test
     public void testRenewSubscription() {
-        Subscription existingSubscription = new Subscription(1, 1, "Monthly", new Date(), new Date(), "active");
+        Subscription existingSubscription = new Subscription(1, 1, "Monthly", new Date(), new Date(), "active", "standard");
 
         Mockito.when(subscriptionDAO.findByUserId(1)).thenReturn(existingSubscription);
         Mockito.when(subscriptionDAO.update(existingSubscription)).thenReturn(true);
@@ -49,7 +47,7 @@ public class SubscriptionServiceTest {
 
     @Test
     public void testCancelSubscription() {
-        Subscription existingSubscription = new Subscription(1, 1, "Monthly", new Date(), new Date(), "active");
+        Subscription existingSubscription = new Subscription(1, 1, "Monthly", new Date(), new Date(), "active", "standard");
 
         Mockito.when(subscriptionDAO.findByUserId(1)).thenReturn(existingSubscription);
         Mockito.when(subscriptionDAO.update(existingSubscription)).thenReturn(true);
