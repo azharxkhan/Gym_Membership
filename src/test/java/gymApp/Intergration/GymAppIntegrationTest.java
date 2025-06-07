@@ -3,10 +3,12 @@ package gymApp.Intergration;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Date;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import gymApp.dao.UserDAOImpl;
@@ -48,7 +50,16 @@ public class GymAppIntegrationTest {
         assertNotNull(savedUser, "User should be saved and retrieved.");
 
         // Add a subscription for this user
-        Subscription subscription = new Subscription(0, savedUser.getId(), "Monthly", new Date(), new Date(), "active");
+        Subscription subscription = new Subscription(
+            0,
+            savedUser.getId(),
+            "Monthly",
+            new Date(),
+            new Date(),
+            "active",
+            "Standard" // new type field
+        );
+
         boolean subscriptionSaved = subscriptionDAO.save(subscription);
 
         assertTrue(subscriptionSaved, "Subscription should be saved successfully.");
@@ -58,6 +69,6 @@ public class GymAppIntegrationTest {
 
         assertNotNull(userSubscription, "Subscription should be found for the user.");
         assertEquals("Monthly", userSubscription.getPlanName(), "Plan name should match.");
+        assertEquals("Standard", userSubscription.getType(), "Subscription type should match.");
     }
 }
-
