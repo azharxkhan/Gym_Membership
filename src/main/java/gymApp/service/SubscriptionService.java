@@ -13,10 +13,11 @@ public class SubscriptionService {
         this.subscriptionDAO = subscriptionDAO;
     }
 
-    public boolean createSubscription(int userId, String planName, Date startDate, Date endDate) {
-        Subscription subscription = new Subscription(0, userId, planName, startDate, endDate, "active");
+    public boolean createSubscription(int userId, String planName, Date startDate, Date endDate, String type) {
+        Subscription subscription = new Subscription(0, userId, planName, startDate, endDate, "active", type);
         return subscriptionDAO.save(subscription);
     }
+
 
     public boolean renewSubscription(int userId, Date newEndDate) {
         Subscription subscription = subscriptionDAO.findByUserId(userId);
