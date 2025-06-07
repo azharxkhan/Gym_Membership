@@ -32,6 +32,7 @@ public class SubscriptionDAOImpl implements SubscriptionDAO {
                 "start_date DATE NOT NULL, " +
                 "end_date DATE NOT NULL, " +
                 "status TEXT NOT NULL, " +
+                "type TEXT NOT NULL, " +   
                 "FOREIGN KEY(user_id) REFERENCES users(id) " +
                 ")";
         try (Statement stmt = connection.createStatement()) {
@@ -41,19 +42,19 @@ public class SubscriptionDAOImpl implements SubscriptionDAO {
 
     @Override
     public boolean save(Subscription subscription) {
-        // First, check if there is an existing active subscription for the user
         if (isUserSubscribed(subscription.getUserId())) {
             System.out.println("User " + subscription.getUserId() + " already has an active subscription.");
-            return false; // Do not proceed if the user already has an active subscription
+            return false; 
         }
 
-        String query = "INSERT INTO subscriptions (user_id, plan_name, start_date, end_date, status) VALUES (?, ?, ?, ?, ?)";
+        String query = "INSERT INTO subscriptions (user_id, plan_name, start_date, end_date, status, type) VALUES (?, ?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setInt(1, subscription.getUserId());
             stmt.setString(2, subscription.getPlanName());
             stmt.setDate(3, new java.sql.Date(subscription.getStartDate().getTime()));
             stmt.setDate(4, new java.sql.Date(subscription.getEndDate().getTime()));
             stmt.setString(5, subscription.getStatus());
+            stmt.setString(6, subscription.getType()); 
             int rowsAffected = stmt.executeUpdate();
 
             if (rowsAffected > 0) {
@@ -74,24 +75,24 @@ public class SubscriptionDAOImpl implements SubscriptionDAO {
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setInt(1, userId);
             ResultSet rs = stmt.executeQuery();
-            return rs.next(); // Returns true if there is an active subscription
+            return rs.next(); 
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return false; // No active subscription found(needs testing)
+        return false; 
     }
-
 
     @Override
     public boolean update(Subscription subscription) {
-        String query = "UPDATE subscriptions SET plan_name = ?, start_date = ?, end_date = ?, status = ? " +
+        String query = "UPDATE subscriptions SET plan_name = ?, start_date = ?, end_date = ?, status = ?, type = ? " +
                 "WHERE id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setString(1, subscription.getPlanName());
             stmt.setDate(2, new Date(subscription.getStartDate().getTime()));
             stmt.setDate(3, new Date(subscription.getEndDate().getTime()));
             stmt.setString(4, subscription.getStatus());
-            stmt.setInt(5, subscription.getId());
+            stmt.setString(5, subscription.getType());  
+            stmt.setInt(6, subscription.getId());
             int rowsAffected = stmt.executeUpdate();
             return rowsAffected > 0;
         } catch (SQLException e) {
@@ -126,7 +127,8 @@ public class SubscriptionDAOImpl implements SubscriptionDAO {
                         rs.getString("plan_name"),
                         rs.getDate("start_date"),
                         rs.getDate("end_date"),
-                        rs.getString("status")
+                        rs.getString("status"),
+                        rs.getString("type")      
                 );
             }
         } catch (SQLException e) {
@@ -148,7 +150,8 @@ public class SubscriptionDAOImpl implements SubscriptionDAO {
                         rs.getString("plan_name"),
                         rs.getDate("start_date"),
                         rs.getDate("end_date"),
-                        rs.getString("status")
+                        rs.getString("status"),
+                        rs.getString("type")   
                 ));
             }
         } catch (SQLException e) {
