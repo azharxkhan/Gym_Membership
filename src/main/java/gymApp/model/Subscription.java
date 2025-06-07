@@ -12,6 +12,7 @@ public class Subscription {
     private Date startDate;
     private Date endDate;
     private String status;
+    private String type;
 
     /**
      * Constructs a Subscription object with specified parameters.
@@ -22,14 +23,17 @@ public class Subscription {
      * @param startDate the start date of the subscription.
      * @param endDate the end date of the subscription.
      * @param status the current status of the subscription (e.g., active, expired).
+     * @param type 
      */
-    public Subscription(int id, int userId, String planName, Date startDate, Date endDate, String status) {
+    public Subscription(int id, int userId, String planName, Date startDate, Date endDate, String status, String type) {
         this.id = id;
         this.userId = userId;
         this.planName = planName;
         this.startDate = startDate;
         this.endDate = endDate;
         this.status = status;
+        this.type = type;
+        
     }
 
     /**
@@ -138,5 +142,13 @@ public class Subscription {
      */
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }
