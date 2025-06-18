@@ -40,7 +40,7 @@ gymApp/
 └── Intergration/
 └── GymAppIntegrationTest.java
 
-````
+```
 
 ---
 
@@ -99,4 +99,3 @@ Run the `GymAppIntegrationTest.java` class to test the full flow:
 
 License – feel free to use, modify, and contribute!
 
-```
