@@ -1,4 +1,3 @@
-```markdown
 # 🏋️ Gym Membership Management System
 
 A lightweight Java-based backend system for managing gym users and their subscriptions. This project is designed to demonstrate clean separation of concerns using DAO interfaces, SQLite integration for persistence, and integration tests using JUnit.
