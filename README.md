@@ -1,18 +1,102 @@
-## Getting Started
+```markdown
+# 🏋️ Gym Membership Management System
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+A lightweight Java-based backend system for managing gym users and their subscriptions. This project is designed to demonstrate clean separation of concerns using DAO interfaces, SQLite integration for persistence, and integration tests using JUnit.
 
-## Folder Structure
+---
 
-The workspace contains two folders by default, where:
+## 📌 Project Overview
 
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
+This project allows basic operations on:
+- **Users**: Create and retrieve gym members
+- **Subscriptions**: Track and manage membership plans, including type and status
 
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
+Everything is tested using an **in-memory SQLite database**, which enables fast and isolated integration tests.
 
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
+---
 
-## Dependency Management
+## ⚙️ Technologies Used
 
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+- **Java**
+- **JDBC**
+- **SQLite**
+- **JUnit 5**
+
+---
+
+## 📁 Project Structure
+
+```
+
+gymApp/
+├── dao/
+│   ├── UserDAO.java
+│   ├── UserDAOImpl.java
+│   ├── SubscriptionDAO.java
+│   └── SubscriptionDAOImpl.java
+├── model/
+│   ├── User.java
+│   └── Subscription.java
+└── Intergration/
+└── GymAppIntegrationTest.java
+
+````
+
+---
+
+## 🚀 Getting Started
+
+### 1. Clone the Repository
+```bash
+git clone https://github.com/your-username/gym-membership-system.git
+cd gym-membership-system
+````
+
+### 2. Open the Project in Your IDE
+
+Make sure your IDE is configured with:
+
+* Java SDK 11 or later
+* JUnit 5
+
+### 3. Run Integration Tests
+
+Run the `GymAppIntegrationTest.java` class to test the full flow:
+
+* Create a user
+* Register a subscription
+* Fetch and verify data from the in-memory database
+
+---
+
+## 📦 Features
+
+* 🔄 Save, update, and delete user subscriptions
+* 🔎 Lookup subscriptions by user ID
+* ✅ Prevent duplicate active subscriptions for a user
+* 🧪 Integration tested with JUnit and SQLite
+
+---
+
+## 📌 Limitations (Current State)
+
+* No GUI or web interface (console/database interaction only)
+* No user authentication
+* No data persistence beyond runtime (unless switched to file-based SQLite)
+
+---
+
+## ✅ Future Improvements
+
+* Add JavaFX admin dashboard
+* Add login & role-based access control
+* Implement detailed reporting (expired plans, active member count, etc.)
+* Use file-based SQLite or switch to MySQL/PostgreSQL
+
+---
+
+## 📄 License
+
+License – feel free to use, modify, and contribute!
+
+```
