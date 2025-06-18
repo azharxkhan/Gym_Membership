@@ -78,5 +78,5 @@ public class MainLogin {
         } else {
             System.out.println("Invalid choice. Please restart the application.");
         }
-    }
+    } //need to add checks in database
 }
