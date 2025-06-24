@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane fx:id="mainPane" xmlns:fx="http://javafx.com/fxml" fx:controller="gymApp.controller.DashboardHomeController">
+    <left>
+        <VBox spacing="10" padding="10">
+            <Button text="Members" onAction="#showMembers"/>
+            <Button text="Subscriptions" onAction="#showSubscriptions"/>
+            <Button text="Payments" onAction="#showPayments"/>
+        </VBox>
+    </left>
+    <center>
+        <Label text="Welcome to Admin Dashboard!" style="-fx-font-size: 18px;"/>
+    </center>
+</BorderPane>

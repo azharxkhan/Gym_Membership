@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="gymApp.controller.MemberController" spacing="10" padding="10">
+    <Label text="Member List" style="-fx-font-size: 16px;"/>
+    <TableView fx:id="memberTable" prefHeight="400" prefWidth="600">
+        <columns>
+            <TableColumn fx:id="nameCol" text="Name" prefWidth="200"/>
+            <TableColumn fx:id="emailCol" text="Email" prefWidth="300"/>
+        </columns>
+    </TableView>
+</VBox>
